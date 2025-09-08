@@ -8,8 +8,14 @@
  * - ExtractHadithInsightsOutput - The return type for the extractHadithInsights function.
  */
 
-import {ai} from '@/ai/genkit';
+import {genkit} from 'genkit';
+import {googleAI} from '@genkit-ai/googleai';
 import {z} from 'genkit';
+
+const ai = genkit({
+  plugins: [googleAI({apiKey: process.env.GEMINI_API_KEY})],
+  model: 'googleai/gemini-pro',
+});
 
 const ExtractHadithInsightsInputSchema = z.object({
   hadithText: z

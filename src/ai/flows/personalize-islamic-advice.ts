@@ -8,8 +8,14 @@
  * - PersonalizeIslamicAdviceOutput - The return type for the personalizeIslamicAdvice function.
  */
 
-import {ai} from '@/ai/genkit';
+import {genkit} from 'genkit';
+import {googleAI} from '@genkit-ai/googleai';
 import {z} from 'genkit';
+
+const ai = genkit({
+  plugins: [googleAI({apiKey: process.env.GEMINI_API_KEY})],
+  model: 'googleai/gemini-pro',
+});
 
 const PersonalizeIslamicAdviceInputSchema = z.object({
   situation: z.string().describe('A detailed description of the user\'s current situation or challenge.'),

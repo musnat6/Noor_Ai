@@ -7,8 +7,14 @@
  * - QuranicGuidanceOutput - The return type for the generateQuranicGuidance function.
  */
 
-import {ai} from '@/ai/genkit';
+import {genkit} from 'genkit';
+import {googleAI} from '@genkit-ai/googleai';
 import {z} from 'genkit';
+
+const ai = genkit({
+  plugins: [googleAI({apiKey: process.env.GEMINI_API_KEY})],
+  model: 'googleai/gemini-pro',
+});
 
 const MessageSchema = z.object({
   role: z.enum(['user', 'assistant']),
