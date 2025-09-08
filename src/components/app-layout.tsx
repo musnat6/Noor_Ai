@@ -21,9 +21,11 @@ import {
   SidebarMenuButton,
   SidebarInset,
   SidebarTrigger,
+  useSidebar,
 } from '@/components/ui/sidebar';
 import { Logo } from '@/components/icons';
 import { AboutButton } from './about-button';
+import { Button } from './ui/button';
 
 const menuItems = [
   { href: '/', label: "Qur'an Guidance", icon: BookOpen },
@@ -31,6 +33,27 @@ const menuItems = [
   { href: '/advice', label: 'Personalized Advice', icon: BrainCircuit },
   { href: '/history', label: 'Islamic History', icon: History },
 ];
+
+function TopBar() {
+  const { isMobile, open, setOpenMobile } = useSidebar();
+  return (
+    <div className="flex items-center justify-between p-2">
+      {!open && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="md:hidden"
+          onClick={() => setOpenMobile(true)}
+        >
+          <Logo className="size-6" />
+        </Button>
+      )}
+      <div className="ml-auto flex items-center gap-2">
+        <AboutButton />
+      </div>
+    </div>
+  );
+}
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -68,8 +91,14 @@ export function AppLayout({ children }: { children: ReactNode }) {
         </SidebarContent>
       </Sidebar>
       <SidebarInset>
+        <div className="absolute top-2 left-2 z-20 hidden md:block">
+           <SidebarTrigger />
+        </div>
         <div className="absolute top-2 right-2 z-20 flex items-center gap-2">
           <AboutButton />
+        </div>
+        <div className="md:hidden">
+          <TopBar />
         </div>
         {children}
       </SidebarInset>
