@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Logo } from '@/components/icons';
 import { AboutButton } from './about-button';
+import { ThemeToggle } from './theme-toggle';
 
 const menuItems = [
   { href: '/', label: "Qur'an Guidance", icon: BookOpen },
@@ -68,7 +69,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
         </SidebarContent>
       </Sidebar>
       <SidebarInset>
-        <div className="absolute top-2 right-2 z-20">
+        <div className="absolute top-2 right-2 z-20 flex items-center gap-2">
+          <ThemeToggle />
           <AboutButton />
         </div>
         {children}

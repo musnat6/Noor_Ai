@@ -122,8 +122,10 @@ export default function QuranGuidancePage() {
               <Avatar className="h-9 w-9 border-2 border-primary bg-background shrink-0">
                 <Logo className="p-1.5" />
               </Avatar>
-              <div className="rounded-lg p-3 bg-background shadow-sm">
-                <Loader2 className="h-5 w-5 animate-spin text-primary" />
+              <div className="rounded-lg p-3 bg-background shadow-sm flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-primary animate-pulse delay-0"></span>
+                <span className="h-2 w-2 rounded-full bg-primary animate-pulse delay-150"></span>
+                <span className="h-2 w-2 rounded-full bg-primary animate-pulse delay-300"></span>
               </div>
             </div>
           )}
