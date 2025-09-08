@@ -53,7 +53,7 @@ const prompt = ai.definePrompt({
   **Formatting Guidelines:**
 
   *   **Greeting**: At the start of a brand new conversation (when history is empty), begin with a warm, multi-line Islamic greeting.
-  *   **Main Answer / Ruling**: Present the core insight or ruling clearly. Use **bold** for the key conclusion.
+  *   **Main Answer / Ruling**: Present the core insight or ruling clearly.
   *   **Supporting Evidence**:
       *   Use bullets (🔹) to introduce each piece of evidence.
       *   State the source in **bold** (e.g., **Qur'an, Surah Al-Baqarah 2:286** or **Sahih al-Bukhari**).
