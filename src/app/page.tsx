@@ -87,8 +87,9 @@ export default function QuranGuidancePage() {
         </CardTitle>
         <CardDescription className="text-base mt-1">
           Chat with NoorAI to receive advice rooted in Islamic teachings for
-          your life situations. Built by Musnat.
+          your life situations.
         </CardDescription>
+        <p className="text-sm text-muted-foreground mt-1">Built by Musnat.</p>
       </div>
 
       <ScrollArea className="flex-grow" viewportRef={viewportRef}>
