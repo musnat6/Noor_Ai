@@ -102,7 +102,7 @@ export default function QuranGuidancePage() {
               }`}
             >
               {message.role === 'assistant' && (
-                <Avatar className="h-9 w-9 border-2 border-primary bg-background shrink-0">
+                <Avatar className="h-9 w-9 border-2 border-primary bg-background shrink-0 shadow-sm">
                   <Logo className="p-1.5" />
                 </Avatar>
               )}
@@ -119,7 +119,7 @@ export default function QuranGuidancePage() {
           ))}
           {isLoading && (
             <div className="flex items-start gap-4">
-              <Avatar className="h-9 w-9 border-2 border-primary bg-background shrink-0">
+              <Avatar className="h-9 w-9 border-2 border-primary bg-background shrink-0 shadow-sm">
                 <Logo className="p-1.5" />
               </Avatar>
               <div className="rounded-lg p-3 bg-background shadow-sm flex items-center gap-1.5">
