@@ -1,13 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { generateQuranicGuidance } from '@/ai/flows/generate-quranic-guidance';
-import {
-  CardDescription,
-  CardTitle,
-} from '@/components/ui/card';
+import { CardDescription, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, Sparkles, Send } from 'lucide-react';
+import { Loader2, Send } from 'lucide-react';
 import { Avatar } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Logo } from '@/components/icons';
@@ -23,8 +20,29 @@ export default function QuranGuidancePage() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
 
-  const handleTextareaKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [input]);
+  
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTo({
+        top: scrollAreaRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  }, [messages]);
+
+
+  const handleTextareaKeyDown = (
+    e: React.KeyboardEvent<HTMLTextAreaElement>
+  ) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSubmit(e as unknown as React.FormEvent);
@@ -62,19 +80,19 @@ export default function QuranGuidancePage() {
 
   return (
     <main className="h-[calc(100dvh)] flex flex-col bg-muted/20">
-      <div className="p-4 sm:p-6 border-b">
-          <CardTitle className="font-headline text-3xl flex items-center gap-2">
-            <Sparkles className="text-accent" />
-            Qur'an & Sunnah Guidance
-          </CardTitle>
-          <CardDescription className="text-base mt-1">
-            Chat with NoorAI to receive advice rooted in Islamic teachings for
-            your life situations.
-          </CardDescription>
+      <div className="p-4 sm:p-6 border-b bg-background">
+        <CardTitle className="font-headline text-3xl flex items-center gap-2">
+          <Logo className="h-8 w-8 text-primary" />
+          NoorAI
+        </CardTitle>
+        <CardDescription className="text-base mt-1">
+          Chat with NoorAI to receive advice rooted in Islamic teachings for
+          your life situations.
+        </CardDescription>
       </div>
 
-      <ScrollArea className="flex-grow p-4 sm:p-6">
-        <div className="space-y-6 max-w-3xl mx-auto">
+      <ScrollArea className="flex-grow" viewportRef={scrollAreaRef}>
+        <div className="space-y-6 max-w-3xl mx-auto p-4 sm:p-6">
           {messages.map((message, index) => (
             <div
               key={index}
@@ -84,7 +102,7 @@ export default function QuranGuidancePage() {
             >
               {message.role === 'assistant' && (
                 <Avatar className="h-9 w-9 border-2 border-primary bg-background shrink-0">
-                  <Logo className="p-1" />
+                  <Logo className="p-1.5" />
                 </Avatar>
               )}
               <div
@@ -94,16 +112,14 @@ export default function QuranGuidancePage() {
                     : 'bg-background'
                 }`}
               >
-                <p className="whitespace-pre-wrap">
-                  {message.content}
-                </p>
+                <p className="whitespace-pre-wrap">{message.content}</p>
               </div>
             </div>
           ))}
           {isLoading && (
             <div className="flex items-start gap-4">
               <Avatar className="h-9 w-9 border-2 border-primary bg-background shrink-0">
-                <Logo className="p-1" />
+                <Logo className="p-1.5" />
               </Avatar>
               <div className="rounded-lg p-3 bg-background shadow-sm">
                 <Loader2 className="h-5 w-5 animate-spin text-primary" />
@@ -117,14 +133,15 @@ export default function QuranGuidancePage() {
       <div className="p-4 sm:p-6 border-t bg-background/50">
         <div className="max-w-3xl mx-auto">
           <form onSubmit={handleSubmit} className="relative">
-             <Textarea
+            <Textarea
+              ref={textareaRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleTextareaKeyDown}
               placeholder="Describe your situation here..."
               disabled={isLoading}
               rows={1}
-              className="text-base min-h-[52px] resize-none p-3 pr-16"
+              className="text-base max-h-[150px] resize-none p-3 pr-16"
             />
             <Button
               type="submit"
