@@ -61,7 +61,7 @@ export default function QuranGuidancePage() {
   };
 
   return (
-    <main className="h-full flex flex-col bg-muted/20">
+    <main className="h-[calc(100dvh)] flex flex-col bg-muted/20">
       <div className="p-4 sm:p-6 border-b">
           <CardTitle className="font-headline text-3xl flex items-center gap-2">
             <Sparkles className="text-accent" />
@@ -84,7 +84,7 @@ export default function QuranGuidancePage() {
             >
               {message.role === 'assistant' && (
                 <Avatar className="h-9 w-9 border-2 border-primary bg-background shrink-0">
-                  <Logo className="p-1.5" />
+                  <Logo className="p-1" />
                 </Avatar>
               )}
               <div
@@ -103,7 +103,7 @@ export default function QuranGuidancePage() {
           {isLoading && (
             <div className="flex items-start gap-4">
               <Avatar className="h-9 w-9 border-2 border-primary bg-background shrink-0">
-                <Logo className="p-1.5" />
+                <Logo className="p-1" />
               </Avatar>
               <div className="rounded-lg p-3 bg-background shadow-sm">
                 <Loader2 className="h-5 w-5 animate-spin text-primary" />

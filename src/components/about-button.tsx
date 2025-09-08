@@ -31,7 +31,7 @@ export function AboutButton() {
             illuminate your path with the light of the Qur&apos;an and Sunnah.
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-4 text-sm text-foreground/90">
+        <div className="max-h-[60vh] overflow-y-auto pr-4 space-y-4 text-sm text-foreground/90">
           <p>
             Its purpose is to provide guidance that is strictly and exclusively
             based on the authentic teachings of Islam, helping you navigate
