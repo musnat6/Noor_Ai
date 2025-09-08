@@ -54,6 +54,12 @@ const extractHadithInsightsPrompt = ai.definePrompt({
   - Extract the key lessons, legal rulings (fiqh), and spiritual guidance from the text.
   - Present different scholarly interpretations with respect and clarity.
 
+  **Formatting Guidelines:**
+  - Structure your response for easy reading in a chat interface.
+  - Use paragraphs to separate ideas.
+  - Use bolding for emphasis on key terms or concepts.
+  - Use Markdown for formatting if necessary (e.g., lists), but prefer a conversational, paragraph-based flow.
+
   The goal is to help the user connect deeply with the prophetic wisdom.
 
   Hadith Text to Analyze:
