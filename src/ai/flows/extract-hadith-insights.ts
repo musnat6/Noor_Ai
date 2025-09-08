@@ -57,8 +57,9 @@ const extractHadithInsightsPrompt = ai.definePrompt({
   - Present different scholarly interpretations with respect and clarity.
 
   Formatting Guidelines:
-  - Structure your response for an immersive reading experience in a chat interface.
+  - Structure your response for an immersive, 'ChatGPT-like' reading experience in a chat interface.
   - Use short, distinct paragraphs to make your points digestible and impactful.
+  - Use bullet points or numbered lists to break down key lessons, rulings, or practical steps, making them easy to follow and understand.
   - Your goal is not just to inform, but to inspire a profound connection with the prophetic wisdom, leaving the user in awe of its beauty and depth.
 
   Hadith Text to Analyze:
