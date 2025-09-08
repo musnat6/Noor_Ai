@@ -12,11 +12,6 @@ import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import {z} from 'genkit';
 
-const ai = genkit({
-  plugins: [googleAI({apiKey: process.env.GEMINI_API_KEY})],
-  model: 'googleai/gemini-pro',
-});
-
 const ExtractHadithInsightsInputSchema = z.object({
   hadithText: z
     .string()
@@ -40,14 +35,16 @@ export type ExtractHadithInsightsOutput = z.infer<
 export async function extractHadithInsights(
   input: ExtractHadithInsightsInput
 ): Promise<ExtractHadithInsightsOutput> {
-  return extractHadithInsightsFlow(input);
-}
+  const ai = genkit({
+    plugins: [googleAI({apiKey: process.env.GEMINI_API_KEY})],
+    model: 'googleai/gemini-pro',
+  });
 
-const extractHadithInsightsPrompt = ai.definePrompt({
-  name: 'extractHadithInsightsPrompt',
-  input: {schema: ExtractHadithInsightsInputSchema},
-  output: {schema: ExtractHadithInsightsOutputSchema},
-  prompt: `You are NoorAI, a wise, compassionate, and deeply inspiring Islamic guide. Your purpose is to illuminate the user's path with the light of the Qur'an and Sunnah. Your communication style must be eloquent and profoundly insightful. Emulate the Prophet Muhammad's (peace be upon him) method of dawah: gentle, patient, clear, and deeply empathetic.
+  const extractHadithInsightsPrompt = ai.definePrompt({
+    name: 'extractHadithInsightsPrompt',
+    input: {schema: ExtractHadithInsightsInputSchema},
+    output: {schema: ExtractHadithInsightsOutputSchema},
+    prompt: `You are NoorAI, a wise, compassionate, and deeply inspiring Islamic guide. Your purpose is to illuminate the user's path with the light of the Qur'an and Sunnah. Your communication style must be eloquent and profoundly insightful. Emulate the Prophet Muhammad's (peace be upon him) method of dawah: gentle, patient, clear, and deeply empathetic.
 
   **Core Instructions:**
   1.  **Foundation of Knowledge**: Your core guidance, rulings, and principles must be strictly and exclusively based on the Qur'an and the authentic Sunnah of the Prophet Muhammad (ﷺ). Do not provide personal opinions or interpretations outside of established Islamic scholarship.
@@ -75,16 +72,19 @@ const extractHadithInsightsPrompt = ai.definePrompt({
   Hadith Text to Analyze:
   {{{hadithText}}}
   `,
-});
+  });
 
-const extractHadithInsightsFlow = ai.defineFlow(
-  {
-    name: 'extractHadithInsightsFlow',
-    inputSchema: ExtractHadithInsightsInputSchema,
-    outputSchema: ExtractHadithInsightsOutputSchema,
-  },
-  async input => {
-    const {output} = await extractHadithInsightsPrompt(input);
-    return output!;
-  }
-);
+  const extractHadithInsightsFlow = ai.defineFlow(
+    {
+      name: 'extractHadithInsightsFlow',
+      inputSchema: ExtractHadithInsightsInputSchema,
+      outputSchema: ExtractHadithInsightsOutputSchema,
+    },
+    async input => {
+      const {output} = await extractHadithInsightsPrompt(input);
+      return output!;
+    }
+  );
+
+  return extractHadithInsightsFlow(input);
+}

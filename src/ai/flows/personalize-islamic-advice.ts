@@ -12,11 +12,6 @@ import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import {z} from 'genkit';
 
-const ai = genkit({
-  plugins: [googleAI({apiKey: process.env.GEMINI_API_KEY})],
-  model: 'googleai/gemini-pro',
-});
-
 const PersonalizeIslamicAdviceInputSchema = z.object({
   situation: z.string().describe('A detailed description of the user\'s current situation or challenge.'),
   personalValues: z.string().describe('The user\'s personal values and beliefs.'),
@@ -35,14 +30,16 @@ const PersonalizeIslamicAdviceOutputSchema = z.object({
 export type PersonalizeIslamicAdviceOutput = z.infer<typeof PersonalizeIslamicAdviceOutputSchema>;
 
 export async function personalizeIslamicAdvice(input: PersonalizeIslamicAdviceInput): Promise<PersonalizeIslamicAdviceOutput> {
-  return personalizeIslamicAdviceFlow(input);
-}
+  const ai = genkit({
+    plugins: [googleAI({apiKey: process.env.GEMINI_API_KEY})],
+    model: 'googleai/gemini-pro',
+  });
 
-const prompt = ai.definePrompt({
-  name: 'personalizeIslamicAdvicePrompt',
-  input: {schema: PersonalizeIslamicAdviceInputSchema},
-  output: {schema: PersonalizeIslamicAdviceOutputSchema},
-  prompt: `You are NoorAI, a wise, gentle, and deeply empathetic Islamic counselor. Your guidance is a source of profound comfort and clarity. Your character must be a reflection of true Islamic manners, and your communication style should be eloquent and insightful.
+  const prompt = ai.definePrompt({
+    name: 'personalizeIslamicAdvicePrompt',
+    input: {schema: PersonalizeIslamicAdviceInputSchema},
+    output: {schema: PersonalizeIslamicAdviceOutputSchema},
+    prompt: `You are NoorAI, a wise, gentle, and deeply empathetic Islamic counselor. Your guidance is a source of profound comfort and clarity. Your character must be a reflection of true Islamic manners, and your communication style should be eloquent and insightful.
 
   **Core Instructions:**
   1.  **Foundation of Knowledge**: Your core guidance, rulings, and principles must be strictly and exclusively based on the Qur'an and the authentic Sunnah of the Prophet Muhammad (ﷺ). Do not provide personal opinions or interpretations outside of established Islamic scholarship.
@@ -77,16 +74,19 @@ const prompt = ai.definePrompt({
   - Gender: {{{gender}}}
 
   Your response should be structured, clear, and full of compassion. Offer practical steps, beautiful supplications, and reminders of Allah's mercy that resonate deeply with the user's soul.`,
-});
+  });
 
-const personalizeIslamicAdviceFlow = ai.defineFlow(
-  {
-    name: 'personalizeIslamicAdviceFlow',
-    inputSchema: PersonalizeIslamicAdviceInputSchema,
-    outputSchema: PersonalizeIslamicAdviceOutputSchema,
-  },
-  async input => {
-    const {output} = await prompt(input);
-    return output!;
-  }
-);
+  const personalizeIslamicAdviceFlow = ai.defineFlow(
+    {
+      name: 'personalizeIslamicAdviceFlow',
+      inputSchema: PersonalizeIslamicAdviceInputSchema,
+      outputSchema: PersonalizeIslamicAdviceOutputSchema,
+    },
+    async input => {
+      const {output} = await prompt(input);
+      return output!;
+    }
+  );
+
+  return personalizeIslamicAdviceFlow(input);
+}

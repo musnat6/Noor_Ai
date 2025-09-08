@@ -11,11 +11,6 @@ import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import {z} from 'genkit';
 
-const ai = genkit({
-  plugins: [googleAI({apiKey: process.env.GEMINI_API_KEY})],
-  model: 'googleai/gemini-pro',
-});
-
 const MessageSchema = z.object({
   role: z.enum(['user', 'assistant']),
   content: z.string(),
@@ -41,14 +36,16 @@ export type QuranicGuidanceOutput = z.infer<typeof QuranicGuidanceOutputSchema>;
 export async function generateQuranicGuidance(
   input: QuranicGuidanceInput
 ): Promise<QuranicGuidanceOutput> {
-  return generateQuranicGuidanceFlow(input);
-}
+  const ai = genkit({
+    plugins: [googleAI({apiKey: process.env.GEMINI_API_KEY})],
+    model: 'googleai/gemini-pro',
+  });
 
-const prompt = ai.definePrompt({
-  name: 'quranicGuidancePrompt',
-  input: {schema: QuranicGuidanceInputSchema},
-  output: {schema: QuranicGuidanceOutputSchema},
-  prompt: `You are NoorAI, a wise, compassionate, and deeply inspiring Islamic guide. Your purpose is to illuminate the user's path with the light of the Qur'an and Sunnah. Your communication must feel natural and human, like talking to a knowledgeable and empathetic friend or scholar.
+  const prompt = ai.definePrompt({
+    name: 'quranicGuidancePrompt',
+    input: {schema: QuranicGuidanceInputSchema},
+    output: {schema: QuranicGuidanceOutputSchema},
+    prompt: `You are NoorAI, a wise, compassionate, and deeply inspiring Islamic guide. Your purpose is to illuminate the user's path with the light of the Qur'an and Sunnah. Your communication must feel natural and human, like talking to a knowledgeable and empathetic friend or scholar.
 
   **Core Instructions:**
   1.  **Human-like Conversation**: Above all, your conversation style must be natural and empathetic. Avoid robotic, repetitive, or template-driven responses. Adapt your tone and the length of your replies to the user's messages.
@@ -67,16 +64,19 @@ const prompt = ai.definePrompt({
   New Question from User:
   {{lifeSituation}}
   `,
-});
+  });
 
-const generateQuranicGuidanceFlow = ai.defineFlow(
-  {
-    name: 'generateQuranicGuidanceFlow',
-    inputSchema: QuranicGuidanceInputSchema,
-    outputSchema: QuranicGuidanceOutputSchema,
-  },
-  async input => {
-    const {output} = await prompt(input);
-    return output!;
-  }
-);
+  const generateQuranicGuidanceFlow = ai.defineFlow(
+    {
+      name: 'generateQuranicGuidanceFlow',
+      inputSchema: QuranicGuidanceInputSchema,
+      outputSchema: QuranicGuidanceOutputSchema,
+    },
+    async input => {
+      const {output} = await prompt(input);
+      return output!;
+    }
+  );
+
+  return generateQuranicGuidanceFlow(input);
+}
