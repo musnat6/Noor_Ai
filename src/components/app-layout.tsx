@@ -35,21 +35,25 @@ const menuItems = [
 ];
 
 function TopBar() {
-  const { setOpenMobile } = useSidebar();
+  const { setOpenMobile, isMobile } = useSidebar();
   return (
-    <div className="flex items-center justify-between p-2 pl-4">
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => setOpenMobile(true)}
-      >
-        <Logo className="size-6" />
-        <span className="sr-only">Open Menu</span>
-      </Button>
+    <header className="flex h-14 items-center justify-between gap-4 border-b bg-background/50 px-4 md:px-6">
+      <div className="flex items-center gap-2">
+        <SidebarTrigger className="md:hidden" />
+        <Link href="/" className='hidden md:block'>
+          <div className="flex items-center gap-2">
+            <Logo className="size-6 shrink-0" />
+            <span className="font-headline text-lg font-semibold">
+              NoorAI
+            </span>
+          </div>
+        </Link>
+      </div>
+
       <div className="flex items-center gap-2">
         <AboutButton />
       </div>
-    </div>
+    </header>
   );
 }
 
@@ -62,10 +66,12 @@ export function AppLayout({ children }: { children: ReactNode }) {
       <Sidebar>
         <SidebarHeader>
           <div className="flex items-center gap-2 p-1">
-            <Logo className="size-8 shrink-0 text-sidebar-foreground" />
-            <span className="font-headline text-xl font-semibold text-sidebar-foreground">
-              NoorAI
-            </span>
+            <Link href="/" className="flex items-center gap-2">
+              <Logo className="size-8 shrink-0 text-sidebar-foreground" />
+              <span className="font-headline text-xl font-semibold text-sidebar-foreground">
+                NoorAI
+              </span>
+            </Link>
             {/* This trigger is only for collapsing the sidebar */}
             <SidebarTrigger className="ml-auto text-sidebar-foreground hover:text-sidebar-accent-foreground hover:bg-sidebar-accent" />
           </div>
@@ -91,17 +97,21 @@ export function AppLayout({ children }: { children: ReactNode }) {
         </SidebarContent>
       </Sidebar>
       <SidebarInset>
-        {/* This trigger is for opening the sidebar when it's collapsed */}
-        <div className="absolute top-2 left-2 z-20">
-           <SidebarTrigger />
-        </div>
-        <div className="absolute top-2 right-2 z-20 flex items-center gap-2">
-          <AboutButton />
+        <div className="hidden md:block">
+           <SidebarTrigger className="absolute top-4 left-4 z-20"/>
         </div>
         <div className="md:hidden">
           <TopBar />
         </div>
-        {children}
+        <div className='flex flex-col h-full'>
+          <div className="hidden md:flex items-center justify-between p-2 pl-14 border-b">
+              <div/>
+             <AboutButton />
+          </div>
+          <div className='flex-grow'>
+             {children}
+          </div>
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );
