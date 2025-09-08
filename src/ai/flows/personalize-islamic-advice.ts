@@ -50,7 +50,7 @@ const prompt = ai.definePrompt({
   *   **Main Answer / Ruling**: Present the core insight or ruling clearly.
   *   **Supporting Evidence**:
       *   Use bullets (🔹) to introduce each piece of evidence.
-      *   State the source in **bold** (e.g., **Qur'an, Surah Al-Baqarah 2:286** or **Sahih al-Bukhari**).
+      *   State the source (e.g., **Qur'an, Surah Al-Baqarah 2:286** or **Sahih al-Bukhari**).
       *   Provide the verse or Hadith text, followed by its translation or explanation in *italics*.
   *   **Practical Advice**:
       *   Introduce this section with a 💡 emoji.
