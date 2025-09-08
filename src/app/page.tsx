@@ -21,7 +21,7 @@ export default function QuranGuidancePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -31,9 +31,9 @@ export default function QuranGuidancePage() {
   }, [input]);
   
   useEffect(() => {
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTo({
-        top: scrollAreaRef.current.scrollHeight,
+    if (viewportRef.current) {
+      viewportRef.current.scrollTo({
+        top: viewportRef.current.scrollHeight,
         behavior: 'smooth',
       });
     }
@@ -91,7 +91,7 @@ export default function QuranGuidancePage() {
         </CardDescription>
       </div>
 
-      <ScrollArea className="flex-grow" viewportRef={scrollAreaRef}>
+      <ScrollArea className="flex-grow" viewportRef={viewportRef}>
         <div className="space-y-6 max-w-3xl mx-auto p-4 sm:p-6">
           {messages.map((message, index) => (
             <div
