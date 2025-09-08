@@ -24,7 +24,7 @@ const PersonalizeIslamicAdviceOutputSchema = z.object({
   advice: z.string().describe('Personalized Islamic advice based on the user\'s situation, values, and context, drawing from the Qur\'an and Sunnah.'),
   relevantQuranicVerses: z.string().describe('Relevant verses from the Quran.'),
   relevantHadith: z.string().describe('Relevant Hadith.'),
-  explanation: z.string().describe('Explanation of how the advice aligns with Islamic teachings.'),
+  explanation: z.string().describe('Explanation of how the advice aligns with Islamic teachings, including relevant stories from the Seerah or Islamic history.'),
 });
 export type PersonalizeIslamicAdviceOutput = z.infer<typeof PersonalizeIslamicAdviceOutputSchema>;
 
@@ -47,6 +47,16 @@ const prompt = ai.definePrompt({
   **Formatting for Chat:** Structure your response for maximum readability and emotional impact. Break down complex points into short, powerful paragraphs. Use **bolding** to emphasize words that inspire hope, wisdom, and action. Your goal is to make the guidance feel like a transformative experience.
 
   A user is seeking your personalized advice. Consider all aspects of their life they have shared: their situation, their values, their culture, age, and gender. Use this to provide advice that is not only sound in its Islamic principles but also deeply personal, relevant, and powerfully applicable to their unique circumstances.
+
+  **Core Task: Provide situation-based solutions from the Qur'an and Sunnah.**
+  1.  **Analyze the User's Situation:** Deeply understand the user's problem or question.
+  2.  **Find Relevant Guidance:** Search the Qur'an and authentic Hadith for verses and narrations that directly address the core issues of the user's situation.
+  3.  **Use Islamic Examples:** To illustrate your points, use relevant stories from the life of the Prophet Muhammad (Seerah), the lives of the Sahaba, or other key events in Islamic history. These examples make the guidance more relatable and powerful.
+  4.  **Structure the Advice:**
+      -   Start with empathy and understanding.
+      -   Present the core advice.
+      -   Provide the specific Qur'anic verses and Hadith that support your advice.
+      -   Explain how these teachings and historical examples apply directly to the user's modern-day problem.
 
   User's Details:
   - Situation: {{{situation}}}
