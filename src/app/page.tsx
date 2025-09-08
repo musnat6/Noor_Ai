@@ -10,27 +10,41 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Loader2, Sparkles } from 'lucide-react';
+import { Loader2, Sparkles, Send } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Logo } from '@/components/icons';
+
+interface Message {
+  role: 'user' | 'assistant';
+  content: string;
+}
 
 export default function QuranGuidancePage() {
-  const [situation, setSituation] = useState('');
-  const [guidance, setGuidance] = useState('');
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!situation.trim()) return;
+    if (!input.trim()) return;
 
+    const userMessage: Message = { role: 'user', content: input };
+    setMessages((prev) => [...prev, userMessage]);
+    setInput('');
     setIsLoading(true);
     setError('');
-    setGuidance('');
 
     try {
-      const result = await generateQuranicGuidance({ lifeSituation: situation });
-      setGuidance(result.advice);
+      const result = await generateQuranicGuidance({ lifeSituation: input });
+      const assistantMessage: Message = {
+        role: 'assistant',
+        content: result.advice,
+      };
+      setMessages((prev) => [...prev, assistantMessage]);
     } catch (err) {
       setError('Failed to get guidance. Please try again.');
       console.error(err);
@@ -40,63 +54,84 @@ export default function QuranGuidancePage() {
   };
 
   return (
-    <main className="p-4 sm:p-6 lg:p-8">
-      <Card className="w-full max-w-3xl mx-auto shadow-lg">
-        <CardHeader>
+    <main className="h-full flex flex-col">
+      <div className="p-4 sm:p-6">
+        <CardHeader className="p-0">
           <CardTitle className="font-headline text-3xl flex items-center gap-2">
             <Sparkles className="text-accent" />
-            Qur'an & Sunnah Guidance
+            Qur'an &amp; Sunnah Guidance
           </CardTitle>
           <CardDescription className="text-base">
-            Describe your situation, and let NoorAI provide you with advice
-            rooted in Islamic teachings.
+            Chat with NoorAI to receive advice rooted in Islamic teachings for your life situations.
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit}>
-            <div className="grid w-full gap-4">
-              <Textarea
-                placeholder="Describe your life situation here..."
-                value={situation}
-                onChange={(e) => setSituation(e.target.value)}
-                rows={5}
-                disabled={isLoading}
-                className="text-base"
-              />
-              <Button
-                type="submit"
-                disabled={isLoading || !situation.trim()}
-                className="w-full sm:w-auto"
-                size="lg"
+      </div>
+
+      <ScrollArea className="flex-grow p-4 sm:p-6">
+        <div className="space-y-4 max-w-3xl mx-auto">
+          {messages.map((message, index) => (
+            <div
+              key={index}
+              className={`flex items-start gap-4 ${
+                message.role === 'user' ? 'justify-end' : ''
+              }`}
+            >
+              {message.role === 'assistant' && (
+                <Avatar className="h-10 w-10 border-2 border-primary">
+                  <Logo className="p-1" />
+                </Avatar>
+              )}
+              <div
+                className={`rounded-lg p-3 max-w-[80%] ${
+                  message.role === 'user'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-secondary'
+                }`}
               >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Seeking Wisdom...
-                  </>
-                ) : (
-                  'Get Guidance'
-                )}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-        {(isLoading || guidance || error) && (
-          <CardFooter className="flex flex-col items-start gap-4">
-            {guidance && (
-              <div className="p-4 bg-secondary/50 rounded-lg w-full">
-                <h3 className="font-headline text-xl mb-2 text-primary">
-                  Guidance from NoorAI
-                </h3>
-                <p className="whitespace-pre-wrap text-foreground/90 text-base">
-                  {guidance}
-                </p>
+                <p className="whitespace-pre-wrap text-base">{message.content}</p>
               </div>
-            )}
-            {error && <p className="text-destructive">{error}</p>}
-          </CardFooter>
-        )}
-      </Card>
+            </div>
+          ))}
+          {isLoading && (
+            <div className="flex items-start gap-4">
+              <Avatar className="h-10 w-10 border-2 border-primary">
+                <Logo className="p-1" />
+              </Avatar>
+              <div className="rounded-lg p-3 bg-secondary">
+                <Loader2 className="h-5 w-5 animate-spin" />
+              </div>
+            </div>
+          )}
+           {error && <p className="text-destructive text-center">{error}</p>}
+        </div>
+      </ScrollArea>
+
+      <div className="p-4 sm:p-6 border-t bg-background">
+        <div className="max-w-3xl mx-auto">
+          <form onSubmit={handleSubmit} className="flex gap-2">
+            <Input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Describe your situation here..."
+              disabled={isLoading}
+              className="text-base h-12"
+            />
+            <Button
+              type="submit"
+              disabled={isLoading || !input.trim()}
+              size="icon"
+              className="h-12 w-12 shrink-0"
+            >
+              {isLoading ? (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              ) : (
+                <Send className="h-5 w-5" />
+              )}
+              <span className="sr-only">Send</span>
+            </Button>
+          </form>
+        </div>
+      </div>
     </main>
   );
 }
