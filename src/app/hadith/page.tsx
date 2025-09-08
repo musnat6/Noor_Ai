@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { generateQuranicGuidance } from '@/ai/flows/generate-quranic-guidance';
+import { extractHadithInsights } from '@/ai/flows/extract-hadith-insights';
 import {
   Card,
   CardContent,
@@ -14,25 +14,25 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Loader2, Sparkles } from 'lucide-react';
 
-export default function QuranGuidancePage() {
-  const [situation, setSituation] = useState('');
-  const [guidance, setGuidance] = useState('');
+export default function HadithInsightPage() {
+  const [hadith, setHadith] = useState('');
+  const [insight, setInsight] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!situation.trim()) return;
+    if (!hadith.trim()) return;
 
     setIsLoading(true);
     setError('');
-    setGuidance('');
+    setInsight('');
 
     try {
-      const result = await generateQuranicGuidance({ lifeSituation: situation });
-      setGuidance(result.advice);
+      const result = await extractHadithInsights({ hadithText: hadith });
+      setInsight(result.insights);
     } catch (err) {
-      setError('Failed to get guidance. Please try again.');
+      setError('Failed to get insights. Please try again.');
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -45,51 +45,51 @@ export default function QuranGuidancePage() {
         <CardHeader>
           <CardTitle className="font-headline text-3xl flex items-center gap-2">
             <Sparkles className="text-accent" />
-            Qur'an & Sunnah Guidance
+            Hadith Insight
           </CardTitle>
           <CardDescription className="text-base">
-            Describe your situation, and let NoorAI provide you with advice
-            rooted in Islamic teachings.
+            Enter a Hadith to receive detailed explanations and context from
+            major collections.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit}>
             <div className="grid w-full gap-4">
               <Textarea
-                placeholder="Describe your life situation here..."
-                value={situation}
-                onChange={(e) => setSituation(e.target.value)}
+                placeholder="Enter the text of the Hadith here..."
+                value={hadith}
+                onChange={(e) => setHadith(e.target.value)}
                 rows={5}
                 disabled={isLoading}
                 className="text-base"
               />
               <Button
                 type="submit"
-                disabled={isLoading || !situation.trim()}
+                disabled={isLoading || !hadith.trim()}
                 className="w-full sm:w-auto"
                 size="lg"
               >
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Seeking Wisdom...
+                    Analyzing...
                   </>
                 ) : (
-                  'Get Guidance'
+                  'Get Insight'
                 )}
               </Button>
             </div>
           </form>
         </CardContent>
-        {(isLoading || guidance || error) && (
+        {(isLoading || insight || error) && (
           <CardFooter className="flex flex-col items-start gap-4">
-            {guidance && (
+            {insight && (
               <div className="p-4 bg-secondary/50 rounded-lg w-full">
                 <h3 className="font-headline text-xl mb-2 text-primary">
-                  Guidance from NoorAI
+                  Insights from NoorAI
                 </h3>
                 <p className="whitespace-pre-wrap text-foreground/90 text-base">
-                  {guidance}
+                  {insight}
                 </p>
               </div>
             )}
