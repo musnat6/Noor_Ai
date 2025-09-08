@@ -33,13 +33,17 @@ export default function QuranGuidancePage() {
     if (!input.trim()) return;
 
     const userMessage: Message = { role: 'user', content: input };
-    setMessages((prev) => [...prev, userMessage]);
+    const newMessages = [...messages, userMessage];
+    setMessages(newMessages);
     setInput('');
     setIsLoading(true);
     setError('');
 
     try {
-      const result = await generateQuranicGuidance({ lifeSituation: input });
+      const result = await generateQuranicGuidance({
+        history: messages,
+        lifeSituation: input,
+      });
       const assistantMessage: Message = {
         role: 'assistant',
         content: result.advice,
@@ -59,10 +63,11 @@ export default function QuranGuidancePage() {
         <CardHeader className="p-0">
           <CardTitle className="font-headline text-3xl flex items-center gap-2">
             <Sparkles className="text-accent" />
-            Qur'an &amp; Sunnah Guidance
+            Qur'an & Sunnah Guidance
           </CardTitle>
           <CardDescription className="text-base">
-            Chat with NoorAI to receive advice rooted in Islamic teachings for your life situations.
+            Chat with NoorAI to receive advice rooted in Islamic teachings for
+            your life situations.
           </CardDescription>
         </CardHeader>
       </div>
@@ -88,7 +93,9 @@ export default function QuranGuidancePage() {
                     : 'bg-secondary'
                 }`}
               >
-                <p className="whitespace-pre-wrap text-base">{message.content}</p>
+                <p className="whitespace-pre-wrap text-base">
+                  {message.content}
+                </p>
               </div>
             </div>
           ))}
@@ -102,7 +109,7 @@ export default function QuranGuidancePage() {
               </div>
             </div>
           )}
-           {error && <p className="text-destructive text-center">{error}</p>}
+          {error && <p className="text-destructive text-center">{error}</p>}
         </div>
       </ScrollArea>
 
