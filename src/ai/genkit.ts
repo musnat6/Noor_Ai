@@ -1,5 +1,3 @@
-'use server';
-
 /**
  * @fileOverview Centralized Genkit AI initialization.
  *
