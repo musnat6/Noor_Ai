@@ -3,19 +3,15 @@
 import { useState } from 'react';
 import { generateQuranicGuidance } from '@/ai/flows/generate-quranic-guidance';
 import {
-  Card,
-  CardContent,
   CardDescription,
-  CardFooter,
-  CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Loader2, Sparkles, Send } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Logo } from '@/components/icons';
+import { Textarea } from '@/components/ui/textarea';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -27,6 +23,13 @@ export default function QuranGuidancePage() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const handleTextareaKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e as unknown as React.FormEvent);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,42 +61,40 @@ export default function QuranGuidancePage() {
   };
 
   return (
-    <main className="h-full flex flex-col">
-      <div className="p-4 sm:p-6">
-        <CardHeader className="p-0">
+    <main className="h-full flex flex-col bg-muted/20">
+      <div className="p-4 sm:p-6 border-b">
           <CardTitle className="font-headline text-3xl flex items-center gap-2">
             <Sparkles className="text-accent" />
             Qur'an & Sunnah Guidance
           </CardTitle>
-          <CardDescription className="text-base">
+          <CardDescription className="text-base mt-1">
             Chat with NoorAI to receive advice rooted in Islamic teachings for
             your life situations.
           </CardDescription>
-        </CardHeader>
       </div>
 
       <ScrollArea className="flex-grow p-4 sm:p-6">
-        <div className="space-y-4 max-w-3xl mx-auto">
+        <div className="space-y-6 max-w-3xl mx-auto">
           {messages.map((message, index) => (
             <div
               key={index}
-              className={`flex items-start gap-4 ${
+              className={`flex items-start gap-4 text-base ${
                 message.role === 'user' ? 'justify-end' : ''
               }`}
             >
               {message.role === 'assistant' && (
-                <Avatar className="h-10 w-10 border-2 border-primary">
-                  <Logo className="p-1" />
+                <Avatar className="h-9 w-9 border-2 border-primary bg-background shrink-0">
+                  <Logo className="p-1.5" />
                 </Avatar>
               )}
               <div
-                className={`rounded-lg p-3 max-w-[80%] ${
+                className={`rounded-xl p-3 max-w-[85%] shadow-sm ${
                   message.role === 'user'
                     ? 'bg-primary text-primary-foreground'
-                    : 'bg-secondary'
+                    : 'bg-background'
                 }`}
               >
-                <p className="whitespace-pre-wrap text-base">
+                <p className="whitespace-pre-wrap">
                   {message.content}
                 </p>
               </div>
@@ -101,11 +102,11 @@ export default function QuranGuidancePage() {
           ))}
           {isLoading && (
             <div className="flex items-start gap-4">
-              <Avatar className="h-10 w-10 border-2 border-primary">
-                <Logo className="p-1" />
+              <Avatar className="h-9 w-9 border-2 border-primary bg-background shrink-0">
+                <Logo className="p-1.5" />
               </Avatar>
-              <div className="rounded-lg p-3 bg-secondary">
-                <Loader2 className="h-5 w-5 animate-spin" />
+              <div className="rounded-lg p-3 bg-background shadow-sm">
+                <Loader2 className="h-5 w-5 animate-spin text-primary" />
               </div>
             </div>
           )}
@@ -113,21 +114,23 @@ export default function QuranGuidancePage() {
         </div>
       </ScrollArea>
 
-      <div className="p-4 sm:p-6 border-t bg-background">
+      <div className="p-4 sm:p-6 border-t bg-background/50">
         <div className="max-w-3xl mx-auto">
-          <form onSubmit={handleSubmit} className="flex gap-2">
-            <Input
+          <form onSubmit={handleSubmit} className="relative">
+             <Textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleTextareaKeyDown}
               placeholder="Describe your situation here..."
               disabled={isLoading}
-              className="text-base h-12"
+              rows={1}
+              className="text-base min-h-[52px] resize-none p-3 pr-16"
             />
             <Button
               type="submit"
               disabled={isLoading || !input.trim()}
               size="icon"
-              className="h-12 w-12 shrink-0"
+              className="absolute right-2 top-1/2 -translate-y-1/2 h-10 w-10 shrink-0"
             >
               {isLoading ? (
                 <Loader2 className="h-5 w-5 animate-spin" />
