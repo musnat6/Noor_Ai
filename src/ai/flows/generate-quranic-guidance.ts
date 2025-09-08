@@ -47,11 +47,7 @@ const prompt = ai.definePrompt({
   Use the conversation history to provide a better, more contextual answer.
 
   {{#each history}}
-  {{#if (eq this.role 'user')}}
-  User: {{content}}
-  {{else}}
-  Assistant: {{content}}
-  {{/if}}
+  {{role}}: {{content}}
   {{/each}}
 
   Provide advice rooted in the Qur'an and Sunnah for the following life situation:
