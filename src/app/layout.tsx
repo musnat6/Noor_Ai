@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { AppLayout } from '@/components/app-layout';
+import './env';
 
 export const metadata: Metadata = {
   title: 'NoorAI: Islamic Wisdom',
