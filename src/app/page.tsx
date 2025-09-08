@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { generateQuranicGuidance } from '@/ai/flows/generate-quranic-guidance';
 import { CardDescription, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Loader2, Send } from 'lucide-react';
@@ -10,7 +9,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Logo } from '@/components/icons';
 import { Textarea } from '@/components/ui/textarea';
 
-interface Message {
+export interface Message {
   role: 'user' | 'assistant';
   content: string;
 }
@@ -56,15 +55,30 @@ export default function QuranGuidancePage() {
     const userMessage: Message = { role: 'user', content: input };
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
+    const currentInput = input;
     setInput('');
     setIsLoading(true);
     setError('');
 
     try {
-      const result = await generateQuranicGuidance({
-        history: messages,
-        lifeSituation: input,
+      const res = await fetch('/api/guidance', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          history: messages,
+          lifeSituation: currentInput,
+        }),
       });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || `API returned ${res.status}`);
+      }
+
+      const result = await res.json();
+
       const assistantMessage: Message = {
         role: 'assistant',
         content: result.advice,
