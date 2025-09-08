@@ -35,25 +35,24 @@ const menuItems = [
 ];
 
 function TopBar() {
-  const { isMobile, open, setOpenMobile } = useSidebar();
+  const { setOpenMobile } = useSidebar();
   return (
-    <div className="flex items-center justify-between p-2">
-      {!open && (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="md:hidden"
-          onClick={() => setOpenMobile(true)}
-        >
-          <Logo className="size-6" />
-        </Button>
-      )}
-      <div className="ml-auto flex items-center gap-2">
+    <div className="flex items-center justify-between p-2 pl-4">
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => setOpenMobile(true)}
+      >
+        <Logo className="size-6" />
+        <span className="sr-only">Open Menu</span>
+      </Button>
+      <div className="flex items-center gap-2">
         <AboutButton />
       </div>
     </div>
   );
 }
+
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -67,6 +66,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
             <span className="font-headline text-xl font-semibold text-sidebar-foreground">
               NoorAI
             </span>
+            {/* This trigger is only for collapsing the sidebar */}
             <SidebarTrigger className="ml-auto text-sidebar-foreground hover:text-sidebar-accent-foreground hover:bg-sidebar-accent" />
           </div>
         </SidebarHeader>
@@ -91,7 +91,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
         </SidebarContent>
       </Sidebar>
       <SidebarInset>
-        <div className="absolute top-2 left-2 z-20 hidden md:block">
+        {/* This trigger is for opening the sidebar when it's collapsed */}
+        <div className="absolute top-2 left-2 z-20">
            <SidebarTrigger />
         </div>
         <div className="absolute top-2 right-2 z-20 flex items-center gap-2">
