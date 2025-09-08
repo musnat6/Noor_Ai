@@ -14,8 +14,12 @@ export function Logo(props: SVGProps<SVGSVGElement>) {
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+      <path d="M12 2v5"></path>
+      <path d="m4.22 10.22 3.54 3.54"></path>
+      <path d="M2 18h5"></path>
+      <path d-="M16.24 13.76 19.78 10.22"></path>
+      <path d="M17 18h5"></path>
     </svg>
   );
 }
