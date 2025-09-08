@@ -23,6 +23,7 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Logo } from '@/components/icons';
+import { AboutButton } from './about-button';
 
 const menuItems = [
   { href: '/', label: "Qur'an Guidance", icon: BookOpen },
@@ -66,7 +67,12 @@ export function AppLayout({ children }: { children: ReactNode }) {
           </SidebarMenu>
         </SidebarContent>
       </Sidebar>
-      <SidebarInset>{children}</SidebarInset>
+      <SidebarInset>
+        <div className="absolute top-2 right-2 z-20">
+          <AboutButton />
+        </div>
+        {children}
+      </SidebarInset>
     </SidebarProvider>
   );
 }
