@@ -4,47 +4,21 @@
  * @fileOverview A flow that extracts insights and explanations from a given Hadith.
  *
  * - extractHadithInsights - A function that takes a Hadith as input and returns insights and explanations.
- * - ExtractHadithInsightsInput - The input type for the extractHadithInsights function.
- * - ExtractHadithInsightsOutput - The return type for the extractHadithInsights function.
  */
 
-import {genkit} from 'genkit';
-import {googleAI} from '@genkit-ai/googleai';
-import {z} from 'genkit';
+import {ai} from '@/ai/genkit';
+import {
+  ExtractHadithInsightsInputSchema,
+  ExtractHadithInsightsOutputSchema,
+  type ExtractHadithInsightsInput,
+  type ExtractHadithInsightsOutput,
+} from '@/ai/schemas';
 
-const ExtractHadithInsightsInputSchema = z.object({
-  hadithText: z
-    .string()
-    .describe('The text of the Hadith for which insights are requested.'),
-});
-export type ExtractHadithInsightsInput = z.infer<
-  typeof ExtractHadithInsightsInputSchema
->;
-
-const ExtractHadithInsightsOutputSchema = z.object({
-  insights: z
-    .string()
-    .describe(
-      'Insights and explanations extracted from the Hadith, drawing from major Hadith collections such as Bukhari and Tirmidhi.'
-    ),
-});
-export type ExtractHadithInsightsOutput = z.infer<
-  typeof ExtractHadithInsightsOutputSchema
->;
-
-export async function extractHadithInsights(
-  input: ExtractHadithInsightsInput
-): Promise<ExtractHadithInsightsOutput> {
-  const ai = genkit({
-    plugins: [googleAI({apiKey: process.env.GEMINI_API_KEY})],
-    model: 'googleai/gemini-pro',
-  });
-
-  const extractHadithInsightsPrompt = ai.definePrompt({
-    name: 'extractHadithInsightsPrompt',
-    input: {schema: ExtractHadithInsightsInputSchema},
-    output: {schema: ExtractHadithInsightsOutputSchema},
-    prompt: `You are NoorAI, a wise, compassionate, and deeply inspiring Islamic guide. Your purpose is to illuminate the user's path with the light of the Qur'an and Sunnah. Your communication style must be eloquent and profoundly insightful. Emulate the Prophet Muhammad's (peace be upon him) method of dawah: gentle, patient, clear, and deeply empathetic.
+const extractHadithInsightsPrompt = ai.definePrompt({
+  name: 'extractHadithInsightsPrompt',
+  input: {schema: ExtractHadithInsightsInputSchema},
+  output: {schema: ExtractHadithInsightsOutputSchema},
+  prompt: `You are NoorAI, a wise, compassionate, and deeply inspiring Islamic guide. Your purpose is to illuminate the user's path with the light of the Qur'an and Sunnah. Your communication style must be eloquent and profoundly insightful. Emulate the Prophet Muhammad's (peace be upon him) method of dawah: gentle, patient, clear, and deeply empathetic.
 
   **Core Instructions:**
   1.  **Foundation of Knowledge**: Your core guidance, rulings, and principles must be strictly and exclusively based on the Qur'an and the authentic Sunnah of the Prophet Muhammad (ﷺ). Do not provide personal opinions or interpretations outside of established Islamic scholarship.
@@ -72,19 +46,22 @@ export async function extractHadithInsights(
   Hadith Text to Analyze:
   {{{hadithText}}}
   `,
-  });
+});
 
-  const extractHadithInsightsFlow = ai.defineFlow(
-    {
-      name: 'extractHadithInsightsFlow',
-      inputSchema: ExtractHadithInsightsInputSchema,
-      outputSchema: ExtractHadithInsightsOutputSchema,
-    },
-    async input => {
-      const {output} = await extractHadithInsightsPrompt(input);
-      return output!;
-    }
-  );
+const extractHadithInsightsFlow = ai.defineFlow(
+  {
+    name: 'extractHadithInsightsFlow',
+    inputSchema: ExtractHadithInsightsInputSchema,
+    outputSchema: ExtractHadithInsightsOutputSchema,
+  },
+  async input => {
+    const {output} = await extractHadithInsightsPrompt(input);
+    return output!;
+  }
+);
 
+export async function extractHadithInsights(
+  input: ExtractHadithInsightsInput
+): Promise<ExtractHadithInsightsOutput> {
   return extractHadithInsightsFlow(input);
 }

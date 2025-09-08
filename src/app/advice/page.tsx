@@ -4,10 +4,8 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import {
-  personalizeIslamicAdvice,
-  type PersonalizeIslamicAdviceOutput,
-} from '@/ai/flows/personalize-islamic-advice';
+import { personalizeIslamicAdvice } from '@/ai/flows/personalize-islamic-advice';
+import { type PersonalizeIslamicAdviceOutput } from '@/ai/schemas';
 
 import {
   Card,

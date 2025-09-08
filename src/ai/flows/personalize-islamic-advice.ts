@@ -1,45 +1,25 @@
 'use server';
 /**
- * @fileOverview AI flow to tailor Islamic advice to individual circumstances, 
+ * @fileOverview AI flow to tailor Islamic advice to individual circumstances,
  * incorporating principles from the Qur'an and Sunnah for relevance and applicability.
  *
  * - personalizeIslamicAdvice - A function that handles the personalization of Islamic advice.
- * - PersonalizeIslamicAdviceInput - The input type for the personalizeIslamicAdvice function.
- * - PersonalizeIslamicAdviceOutput - The return type for the personalizeIslamicAdvice function.
  */
 
-import {genkit} from 'genkit';
-import {googleAI} from '@genkit-ai/googleai';
-import {z} from 'genkit';
+import {ai} from '@/ai/genkit';
+import {
+  PersonalizeIslamicAdviceInputSchema,
+  PersonalizeIslamicAdviceOutputSchema,
+  type PersonalizeIslamicAdviceInput,
+  type PersonalizeIslamicAdviceOutput,
+} from '@/ai/schemas';
 
-const PersonalizeIslamicAdviceInputSchema = z.object({
-  situation: z.string().describe('A detailed description of the user\'s current situation or challenge.'),
-  personalValues: z.string().describe('The user\'s personal values and beliefs.'),
-  culturalContext: z.string().describe('The user\'s cultural and social background.'),
-  age: z.number().describe('The user\'s age.'),
-  gender: z.string().describe('The user\'s gender identity.'),
-});
-export type PersonalizeIslamicAdviceInput = z.infer<typeof PersonalizeIslamicAdviceInputSchema>;
 
-const PersonalizeIslamicAdviceOutputSchema = z.object({
-  advice: z.string().describe('Personalized Islamic advice based on the user\'s situation, values, and context, drawing from the Qur\'an and Sunnah.'),
-  relevantQuranicVerses: z.string().describe('Relevant verses from the Quran.'),
-  relevantHadith: z.string().describe('Relevant Hadith.'),
-  explanation: z.string().describe('Explanation of how the advice aligns with Islamic teachings, including relevant stories from the Seerah or Islamic history.'),
-});
-export type PersonalizeIslamicAdviceOutput = z.infer<typeof PersonalizeIslamicAdviceOutputSchema>;
-
-export async function personalizeIslamicAdvice(input: PersonalizeIslamicAdviceInput): Promise<PersonalizeIslamicAdviceOutput> {
-  const ai = genkit({
-    plugins: [googleAI({apiKey: process.env.GEMINI_API_KEY})],
-    model: 'googleai/gemini-pro',
-  });
-
-  const prompt = ai.definePrompt({
-    name: 'personalizeIslamicAdvicePrompt',
-    input: {schema: PersonalizeIslamicAdviceInputSchema},
-    output: {schema: PersonalizeIslamicAdviceOutputSchema},
-    prompt: `You are NoorAI, a wise, gentle, and deeply empathetic Islamic counselor. Your guidance is a source of profound comfort and clarity. Your character must be a reflection of true Islamic manners, and your communication style should be eloquent and insightful.
+const personalizeIslamicAdvicePrompt = ai.definePrompt({
+  name: 'personalizeIslamicAdvicePrompt',
+  input: {schema: PersonalizeIslamicAdviceInputSchema},
+  output: {schema: PersonalizeIslamicAdviceOutputSchema},
+  prompt: `You are NoorAI, a wise, gentle, and deeply empathetic Islamic counselor. Your guidance is a source of profound comfort and clarity. Your character must be a reflection of true Islamic manners, and your communication style should be eloquent and insightful.
 
   **Core Instructions:**
   1.  **Foundation of Knowledge**: Your core guidance, rulings, and principles must be strictly and exclusively based on the Qur'an and the authentic Sunnah of the Prophet Muhammad (ﷺ). Do not provide personal opinions or interpretations outside of established Islamic scholarship.
@@ -74,19 +54,22 @@ export async function personalizeIslamicAdvice(input: PersonalizeIslamicAdviceIn
   - Gender: {{{gender}}}
 
   Your response should be structured, clear, and full of compassion. Offer practical steps, beautiful supplications, and reminders of Allah's mercy that resonate deeply with the user's soul.`,
-  });
+});
 
-  const personalizeIslamicAdviceFlow = ai.defineFlow(
-    {
-      name: 'personalizeIslamicAdviceFlow',
-      inputSchema: PersonalizeIslamicAdviceInputSchema,
-      outputSchema: PersonalizeIslamicAdviceOutputSchema,
-    },
-    async input => {
-      const {output} = await prompt(input);
-      return output!;
-    }
-  );
+const personalizeIslamicAdviceFlow = ai.defineFlow(
+  {
+    name: 'personalizeIslamicAdviceFlow',
+    inputSchema: PersonalizeIslamicAdviceInputSchema,
+    outputSchema: PersonalizeIslamicAdviceOutputSchema,
+  },
+  async input => {
+    const {output} = await personalizeIslamicAdvicePrompt(input);
+    return output!;
+  }
+);
 
+export async function personalizeIslamicAdvice(
+  input: PersonalizeIslamicAdviceInput
+): Promise<PersonalizeIslamicAdviceOutput> {
   return personalizeIslamicAdviceFlow(input);
 }
