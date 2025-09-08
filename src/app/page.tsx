@@ -70,8 +70,8 @@ export default function QuranGuidancePage() {
         content: result.advice,
       };
       setMessages((prev) => [...prev, assistantMessage]);
-    } catch (err) {
-      setError('Failed to get guidance. Please try again.');
+    } catch (err: any) {
+      setError(`Failed to get guidance: ${err.message || 'An unknown error occurred.'}`);
       console.error(err);
     } finally {
       setIsLoading(false);
