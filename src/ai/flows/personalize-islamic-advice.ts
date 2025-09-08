@@ -14,7 +14,6 @@ import {
   type PersonalizeIslamicAdviceOutput,
 } from '@/ai/schemas';
 
-
 const personalizeIslamicAdvicePrompt = ai.definePrompt({
   name: 'personalizeIslamicAdvicePrompt',
   input: {schema: PersonalizeIslamicAdviceInputSchema},

@@ -1,5 +1,4 @@
 'use server';
-
 /**
  * @fileOverview A flow that extracts insights and explanations from a given Hadith.
  *
