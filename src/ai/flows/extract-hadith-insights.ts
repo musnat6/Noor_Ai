@@ -15,7 +15,7 @@ import {
 
 const extractHadithInsightsPrompt = ai.definePrompt({
   name: 'extractHadithInsightsPrompt',
-  model: 'googleai/gemini-2.5-pro',
+  model: 'googleai/gemini-1.5-flash-latest',
   input: {schema: ExtractHadithInsightsInputSchema},
   output: {schema: ExtractHadithInsightsOutputSchema},
   prompt: `You are NoorAI, a wise, compassionate, and deeply inspiring Islamic guide. Your purpose is to illuminate the user's path with the light of the Qur'an and Sunnah. Your communication style must be eloquent and profoundly insightful. Emulate the Prophet Muhammad's (peace be upon him) method of dawah: gentle, patient, clear, and deeply empathetic.
