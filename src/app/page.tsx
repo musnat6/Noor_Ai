@@ -85,7 +85,12 @@ export default function QuranGuidancePage() {
       };
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (err: any) {
-      setError(`Failed to get guidance: ${err.message || 'An unknown error occurred.'}`);
+      const errorMessage = err.message || 'An unknown error occurred.';
+      if (errorMessage.includes('503') || errorMessage.toLowerCase().includes('overloaded')) {
+        setError('The AI model is currently busy. Please wait a moment and try again.');
+      } else {
+        setError(`Failed to get guidance: ${errorMessage}`);
+      }
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -143,7 +148,7 @@ export default function QuranGuidancePage() {
               </div>
             </div>
           )}
-          {error && <p className="text-destructive text-center">{error}</p>}
+          {error && <p className="text-destructive text-center p-4">{error}</p>}
         </div>
       </ScrollArea>
 
