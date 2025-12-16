@@ -16,7 +16,7 @@ import {
 
 const personalizeIslamicAdvicePrompt = ai.definePrompt({
   name: 'personalizeIslamicAdvicePrompt',
-  model: 'googleai/gemini-1.5-flash-latest',
+  model: 'googleai/gemini-2.5-flash',
   input: {schema: PersonalizeIslamicAdviceInputSchema},
   output: {schema: PersonalizeIslamicAdviceOutputSchema},
   prompt: `You are NoorAI, a wise, gentle, and deeply empathetic Islamic counselor. Your guidance is a source of profound comfort and clarity. Your character must be a reflection of true Islamic manners, and your communication style should be eloquent and insightful.
