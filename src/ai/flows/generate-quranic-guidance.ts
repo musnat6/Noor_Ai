@@ -15,7 +15,7 @@ import {
 
 const quranicGuidancePrompt = ai.definePrompt({
   name: 'quranicGuidancePrompt',
-  model: 'googleai/gemini-1.0-pro',
+  model: 'googleai/gemini-pro',
   input: {schema: QuranicGuidanceInputSchema},
   output: {schema: QuranicGuidanceOutputSchema},
   prompt: `You are NoorAI, a wise, compassionate, and deeply inspiring Islamic guide. Your purpose is to illuminate the user's path with the light of the Qur'an and Sunnah. Your communication must feel natural and human, like talking to a knowledgeable and empathetic friend or scholar.
